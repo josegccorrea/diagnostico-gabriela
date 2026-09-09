@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico PPGCF-UFES 2026 — Gabriela</title>
+<style>
+:root {
+  --bg:#f4f6f8; --card:#ffffff; --text:#17202a; --muted:#667085;
+  --accent:#163a5f; --accent2:#245b8f; --ok:#146c43; --bad:#a52834; --warn:#8a5a00;
+  --border:#d9dee5;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+header{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;padding:28px 18px}
+.wrap{max-width:920px;margin:0 auto}
+h1{margin:0 0 6px;font-size:clamp(1.55rem,4vw,2.3rem)}
+.subtitle{opacity:.9;margin:0}
+main{padding:24px 16px 80px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 4px 18px rgba(16,24,40,.05)}
+.rules li{margin:.45rem 0}
+button{border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:pointer;font-size:1rem}
+.primary{background:var(--accent);color:#fff}
+.secondary{background:#e9eef4;color:var(--accent)}
+.danger{background:#fbe9eb;color:var(--bad)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(244,246,248,.96);backdrop-filter:blur(7px);border-bottom:1px solid var(--border);padding:10px 16px;margin:0 -16px 18px}
+.toprow{max-width:920px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.1rem}
+.progressOuter{height:8px;background:#dde3ea;border-radius:999px;overflow:hidden;flex:1;min-width:180px}
+.progressInner{height:100%;background:var(--accent2);width:0%}
+.question{padding:20px;border:1px solid var(--border);background:#fff;border-radius:14px;margin-bottom:14px}
+.qhead{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
+.badge{font-size:.78rem;padding:4px 8px;background:#eef3f8;border-radius:999px;color:var(--accent);white-space:nowrap}
+.qtext{font-weight:700;margin:8px 0 14px}
+.option{display:block;border:1px solid var(--border);border-radius:10px;padding:11px 12px;margin:8px 0;cursor:pointer}
+.option:hover{background:#f7f9fb}
+.option input{margin-right:8px}
+.correct{border-color:#85c7a8;background:#edf8f2}
+.incorrect{border-color:#e5a4ab;background:#fff2f3}
+.explanation{margin-top:10px;padding:10px 12px;background:#f7f9fb;border-left:4px solid var(--accent2);border-radius:6px}
+.resultGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:14px 0}
+.metric{border:1px solid var(--border);border-radius:12px;padding:14px;background:#fafbfc}
+.metric .big{font-size:1.65rem;font-weight:800}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{padding:9px;border-bottom:1px solid var(--border);text-align:left}
+.copybox{width:100%;min-height:210px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fbfcfd}
+.small{color:var(--muted);font-size:.92rem}
+.hidden{display:none!important}
+.notice{padding:11px 13px;border-radius:10px;background:#fff8e6;color:#654700;border:1px solid #f1d48d}
+.footerActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+@media(max-width:600px){.card,.question{padding:16px} .qhead{display:block} .badge{display:inline-block;margin-top:6px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Diagnóstico de Fisiologia — PPGCF/UFES</h1>
+    <p class="subtitle">40 questões autorais • 4 áreas • simulação diagnóstica para o Edital 06/2026</p>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="intro" class="card">
+  <h2>Antes de começar</h2>
+  <div class="notice"><strong>Importante:</strong> esta não é uma prova oficial da UFES. As questões foram construídas a partir do conteúdo programático do Edital 06/2026 para medir o ponto de partida.</div>
+  <ul class="rules">
+    <li>Tempo máximo: <strong>3 horas</strong>, igual à duração prevista para a prova.</li>
+    <li>Faça <strong>sem consultar livros, resumos, Google ou IA</strong>.</li>
+    <li>Responda todas as questões, mesmo que precise chutar.</li>
+    <li>A correção e as explicações só aparecem depois de finalizar.</li>
+    <li>O resultado separa o desempenho em Endócrino, Cardiovascular, Renal e Neurofisiologia.</li>
+  </ul>
+  <p class="small">O navegador salva o andamento localmente. Se a página for recarregada, o cronômetro continua.</p>
+  <button class="primary" id="startBtn">Começar diagnóstico</button>
+</section>
+
+<section id="exam" class="hidden">
+  <div class="topbar">
+    <div class="toprow">
+      <div class="timer">Tempo restante: <span id="timer">03:00:00</span></div>
+      <div class="progressOuter"><div id="progress" class="progressInner"></div></div>
+      <div><strong><span id="answered">0</span>/40</strong> respondidas</div>
+    </div>
+  </div>
+  <form id="quizForm"></form>
+  <div class="card">
+    <h3>Finalizar</h3>
+    <p class="small">Revise apenas se ainda houver tempo. O objetivo hoje é medir conhecimento real, não “fabricar” uma nota bonita.</p>
+    <button type="button" class="primary" id="submitBtn">Finalizar e corrigir</button>
+  </div>
+</section>
+
+<section id="results" class="hidden">
+  <div class="card">
+    <h2>Resultado do diagnóstico</h2>
+    <div id="resultMetrics" class="resultGrid"></div>
+    <h3>Desempenho por área</h3>
+    <div id="areaTable"></div>
+    <h3>Desempenho por tópico</h3>
+    <div id="topicTable"></div>
+  </div>
+
+  <div class="card">
+    <h2>Resultado para enviar ao ChatGPT</h2>
+    <p class="small">Copie todo o bloco abaixo e envie na conversa. Com isso será possível calibrar o plano dia a dia.</p>
+    <textarea id="summaryText" class="copybox" readonly></textarea>
+    <div class="footerActions">
+      <button class="primary" id="copyBtn">Copiar resultado</button>
+      <button class="secondary" id="downloadBtn">Baixar resultado .txt</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Correção comentada</h2>
+    <p class="small">Abaixo aparecem as 40 questões com a alternativa correta e uma justificativa curta. Priorize as erradas e as acertadas por chute.</p>
+    <div id="review"></div>
+  </div>
+
+  <div class="card">
+    <button class="danger" id="resetBtn">Reiniciar diagnóstico</button>
+  </div>
+</section>
+</main>
+
+<script>
+const questions = [{"id": 1, "area": "Endócrino", "topic": "Ação hormonal", "q": "Qual alternativa descreve melhor uma diferença clássica entre hormônios peptídicos e hormônios esteroides?", "opts": ["Hormônios peptídicos atravessam livremente a membrana plasmática e ligam-se principalmente a receptores nucleares.", "Hormônios esteroides costumam atuar por receptores intracelulares, enquanto muitos hormônios peptídicos atuam por receptores de membrana.", "Hormônios esteroides são armazenados em grandes vesículas secretoras antes de serem liberados.", "Hormônios peptídicos circulam sempre ligados a proteínas plasmáticas específicas."], "ans": 1, "why": "Hormônios esteroides são lipossolúveis e tipicamente atuam em receptores citosólicos/nucleares; peptídicos, em geral, ligam-se a receptores de membrana."}, {"id": 11, "area": "Cardiovascular", "topic": "Biofísica da circulação", "q": "Segundo a relação de Poiseuille, mantendo os demais fatores constantes, o fluxo através de um vaso é especialmente sensível a alterações no:", "opts": ["Raio do vaso, pois o fluxo varia aproximadamente com a quarta potência do raio.", "Comprimento do vaso, pois o fluxo varia com a quarta potência do comprimento.", "Hematócrito, pois não influencia a viscosidade.", "Gradiente de pressão, pois o fluxo é inversamente proporcional a ele."], "ans": 0, "why": "Na forma idealizada da lei de Poiseuille, o fluxo é proporcional a ΔP·r⁴ e inversamente proporcional à viscosidade e ao comprimento."}, {"id": 21, "area": "Renal", "topic": "Filtração glomerular", "q": "Qual força favorece diretamente a filtração do plasma através dos capilares glomerulares?", "opts": ["Pressão hidrostática no espaço de Bowman.", "Pressão oncótica do plasma capilar glomerular.", "Pressão hidrostática nos capilares glomerulares.", "Pressão oncótica no espaço de Bowman em condições normais."], "ans": 2, "why": "A pressão hidrostática capilar glomerular é a principal força que favorece filtração; pressão em Bowman e oncótica plasmática se opõem."}, {"id": 31, "area": "Neurofisiologia", "topic": "Bioeletrogênese", "q": "O potencial de repouso de muitos neurônios é mais próximo do potencial de equilíbrio do K⁺ principalmente porque:", "opts": ["A membrana em repouso é relativamente mais permeável ao K⁺ do que ao Na⁺.", "Não existem canais de Na⁺ na membrana neuronal.", "A Na⁺/K⁺-ATPase transporta K⁺ para fora e Na⁺ para dentro.", "K⁺ é o único íon presente no líquido intracelular."], "ans": 0, "why": "A alta permeabilidade de repouso ao K⁺ faz o potencial de membrana ficar próximo de E_K; a bomba mantém os gradientes."}, {"id": 2, "area": "Endócrino", "topic": "Eixo hipotálamo-hipófise", "q": "No eixo hipotálamo-hipófise-tireoide, um aumento sustentado de T3 e T4 tende a:", "opts": ["Aumentar a secreção de TRH e TSH por feedback positivo.", "Aumentar TRH e reduzir TSH.", "Reduzir TRH e TSH por feedback negativo.", "Não alterar TRH nem TSH."], "ans": 2, "why": "T3 e T4 exercem feedback negativo sobre hipotálamo e adeno-hipófise, reduzindo TRH e TSH."}, {"id": 12, "area": "Cardiovascular", "topic": "Biofísica da circulação", "q": "Em termos hemodinâmicos, o fluxo sanguíneo através de um leito vascular pode ser expresso, de forma simplificada, por:", "opts": ["Fluxo = resistência / gradiente de pressão.", "Fluxo = gradiente de pressão × resistência.", "Fluxo = gradiente de pressão / resistência.", "Fluxo = viscosidade / raio."], "ans": 2, "why": "A relação básica é Q = ΔP/R."}, {"id": 22, "area": "Renal", "topic": "Filtração glomerular", "q": "A depuração (clearance) de inulina é usada experimentalmente para estimar a taxa de filtração glomerular porque a inulina:", "opts": ["É filtrada e totalmente reabsorvida.", "É filtrada, mas praticamente não é reabsorvida nem secretada.", "Não é filtrada e é apenas secretada.", "É produzida continuamente pelos rins."], "ans": 1, "why": "Uma substância filtrada livremente, sem reabsorção ou secreção, tem clearance igual à TFG."}, {"id": 32, "area": "Neurofisiologia", "topic": "Bioeletrogênese", "q": "Na fase ascendente rápida do potencial de ação em um axônio típico ocorre principalmente:", "opts": ["Abertura de canais de K⁺ dependentes de voltagem e efluxo de K⁺.", "Abertura de canais de Na⁺ dependentes de voltagem e influxo de Na⁺.", "Fechamento de todos os canais iônicos.", "Entrada maciça de Cl⁻."], "ans": 1, "why": "A despolarização rápida do potencial de ação axonal é causada principalmente pela abertura de canais de Na⁺ voltagem-dependentes."}, {"id": 3, "area": "Endócrino", "topic": "Eixo hipotálamo-hipófise", "q": "A respeito da neuro-hipófise, assinale a correta:", "opts": ["Sintetiza ACTH e TSH.", "Sintetiza ADH e ocitocina em células endócrinas próprias.", "Armazena e libera hormônios sintetizados em neurônios hipotalâmicos.", "É a principal fonte de prolactina."], "ans": 2, "why": "ADH e ocitocina são sintetizados em neurônios hipotalâmicos e transportados para armazenamento/liberação pela neuro-hipófise."}, {"id": 13, "area": "Cardiovascular", "topic": "Contração do músculo cardíaco", "q": "No cardiomiócito ventricular, o Ca²⁺ que entra por canais de Ca²⁺ tipo L durante o potencial de ação:", "opts": ["Bloqueia a liberação de Ca²⁺ pelo retículo sarcoplasmático.", "Desencadeia liberação adicional de Ca²⁺ pelo retículo sarcoplasmático.", "Impede a ligação de Ca²⁺ à troponina C.", "É irrelevante para o acoplamento excitação-contração."], "ans": 1, "why": "O influxo de Ca²⁺ por canais L desencadeia liberação de Ca²⁺ pelo retículo sarcoplasmático: calcium-induced calcium release."}, {"id": 23, "area": "Renal", "topic": "Filtração glomerular", "q": "O clearance de creatinina endógena costuma:", "opts": ["Subestimar muito a TFG porque a creatinina é totalmente reabsorvida.", "Aproximar a TFG, podendo superestimá-la discretamente por pequena secreção tubular.", "Medir diretamente o fluxo sanguíneo renal.", "Ser zero em indivíduos saudáveis."], "ans": 1, "why": "A creatinina é filtrada e sofre pequena secreção tubular, por isso seu clearance aproxima e pode superestimar levemente a TFG."}, {"id": 33, "area": "Neurofisiologia", "topic": "Transmissão sináptica", "q": "Em uma sinapse química, a liberação de neurotransmissor pelo terminal pré-sináptico é desencadeada diretamente por:", "opts": ["Saída de Ca²⁺ do terminal.", "Entrada de Ca²⁺ por canais dependentes de voltagem.", "Entrada de Na⁺ por receptores pós-sinápticos.", "Abertura de canais de Cl⁻ no neurônio pós-sináptico."], "ans": 1, "why": "A chegada do potencial de ação abre canais de Ca²⁺ pré-sinápticos; o Ca²⁺ induz fusão vesicular e exocitose."}, {"id": 4, "area": "Endócrino", "topic": "Pâncreas e metabolismo", "q": "Após uma refeição rica em carboidratos, a insulina favorece principalmente:", "opts": ["Aumento da glicogenólise hepática.", "Aumento da captação de glicose em músculo e tecido adiposo por recrutamento de GLUT4.", "Aumento da gliconeogênese hepática.", "Aumento da lipólise no tecido adiposo."], "ans": 1, "why": "A insulina promove captação de glicose em músculo e adipócito via GLUT4 e favorece armazenamento energético."}, {"id": 14, "area": "Cardiovascular", "topic": "Trabalho cardíaco", "q": "Pelo mecanismo de Frank-Starling, um aumento do volume diastólico final, dentro da faixa fisiológica, tende a:", "opts": ["Diminuir a força de contração e o volume sistólico.", "Aumentar a força de contração e o volume sistólico.", "Reduzir obrigatoriamente a frequência cardíaca a zero.", "Não alterar o desempenho ventricular."], "ans": 1, "why": "Maior enchimento aumenta o estiramento das fibras miocárdicas e, dentro da faixa fisiológica, eleva a força e o volume sistólico."}, {"id": 24, "area": "Renal", "topic": "Reabsorção tubular", "q": "Em condições normais, a maior parte da glicose filtrada é reabsorvida:", "opts": ["No túbulo proximal, por cotransporte com Na⁺ na membrana apical.", "Na alça fina descendente, por difusão simples exclusiva.", "No túbulo distal, independentemente de transportadores.", "No ducto coletor, sob ação direta de ADH."], "ans": 0, "why": "A glicose é reabsorvida principalmente no túbulo proximal via cotransportadores Na⁺/glicose."}, {"id": 34, "area": "Neurofisiologia", "topic": "Transmissão sináptica", "q": "Um potencial pós-sináptico excitatório (EPSP) caracteriza-se, em geral, por:", "opts": ["Despolarizar a membrana pós-sináptica, aproximando-a do limiar.", "Sempre gerar um potencial de ação.", "Hiperpolarizar obrigatoriamente a membrana.", "Ser independente da abertura de canais iônicos."], "ans": 0, "why": "EPSPs são potenciais graduados que tornam a membrana mais propensa a atingir o limiar, sem garantir um potencial de ação."}, {"id": 5, "area": "Endócrino", "topic": "Pâncreas e metabolismo", "q": "Durante jejum, uma ação fisiológica importante do glucagon é:", "opts": ["Estimular glicogenólise e gliconeogênese hepáticas.", "Estimular captação de glicose por GLUT4 em músculo esquelético.", "Inibir a produção hepática de glicose.", "Estimular diretamente a síntese de glicogênio hepático."], "ans": 0, "why": "O glucagon ajuda a manter a glicemia no jejum estimulando produção hepática de glicose."}, {"id": 15, "area": "Cardiovascular", "topic": "Ciclo cardíaco", "q": "A primeira bulha cardíaca (B1/S1) está associada principalmente ao:", "opts": ["Fechamento das válvulas aórtica e pulmonar.", "Fechamento das válvulas mitral e tricúspide.", "Enchimento rápido ventricular.", "Abertura das válvulas semilunares."], "ans": 1, "why": "S1 decorre principalmente do fechamento das válvulas atrioventriculares no início da sístole."}, {"id": 25, "area": "Renal", "topic": "Reabsorção tubular", "q": "O ramo espesso ascendente da alça de Henle caracteriza-se por:", "opts": ["Alta permeabilidade à água e ausência de transporte de NaCl.", "Reabsorção de Na⁺, K⁺ e Cl⁻ e baixa permeabilidade à água.", "Reabsorção de glicose dependente de insulina.", "Secreção obrigatória de grandes volumes de água."], "ans": 1, "why": "O ramo espesso ascendente usa o cotransportador NKCC2 e é relativamente impermeável à água."}, {"id": 35, "area": "Neurofisiologia", "topic": "Sistema sensorial somático", "q": "A via coluna dorsal–lemnisco medial conduz principalmente:", "opts": ["Dor e temperatura.", "Tato discriminativo, vibração e propriocepção consciente.", "Comandos motores voluntários.", "Informação autonômica visceral exclusivamente."], "ans": 1, "why": "Colunas dorsais conduzem tato fino/discriminativo, vibração e propriocepção; dor/temperatura seguem predominantemente pelo sistema anterolateral."}, {"id": 6, "area": "Endócrino", "topic": "Tireoide e metabolismo", "q": "Um efeito típico dos hormônios tireoidianos em níveis fisiológicos é:", "opts": ["Reduzir o consumo de oxigênio na maioria dos tecidos.", "Reduzir a taxa metabólica basal.", "Aumentar a taxa metabólica basal e potencializar respostas às catecolaminas.", "Bloquear a síntese proteica em todos os tecidos."], "ans": 2, "why": "T3/T4 elevam o metabolismo basal e aumentam, entre outros efeitos, a responsividade adrenérgica."}, {"id": 16, "area": "Cardiovascular", "topic": "Trabalho cardíaco", "q": "O débito cardíaco é definido como:", "opts": ["Pressão arterial média × resistência periférica.", "Frequência cardíaca × volume sistólico.", "Volume diastólico final − frequência cardíaca.", "Pressão sistólica − pressão diastólica."], "ans": 1, "why": "Débito cardíaco = frequência cardíaca × volume sistólico."}, {"id": 26, "area": "Renal", "topic": "Osmolaridade", "q": "O ADH aumenta a reabsorção de água principalmente ao:", "opts": ["Inserir aquaporina-2 na membrana apical de células principais do ducto coletor.", "Bloquear aquaporinas no ducto coletor.", "Inibir o gradiente osmótico medular.", "Reduzir a permeabilidade à água no néfron distal."], "ans": 0, "why": "ADH, via receptor V2, promove inserção de AQP2 na membrana apical das células principais."}, {"id": 36, "area": "Neurofisiologia", "topic": "Sistema nervoso autônomo", "q": "Todos os neurônios pré-ganglionares do sistema nervoso autônomo, simpáticos e parassimpáticos, liberam principalmente:", "opts": ["Noradrenalina", "Acetilcolina", "Dopamina", "Serotonina"], "ans": 1, "why": "Todos os neurônios autonômicos pré-ganglionares são colinérgicos."}, {"id": 7, "area": "Endócrino", "topic": "Ação hormonal", "q": "O receptor de insulina é classificado principalmente como:", "opts": ["Receptor intracelular associado diretamente ao DNA.", "Canal iônico ativado por ligante.", "Receptor acoplado à proteína Gs.", "Receptor com atividade tirosina-quinase."], "ans": 3, "why": "O receptor de insulina possui atividade tirosina-quinase intrínseca."}, {"id": 17, "area": "Cardiovascular", "topic": "Pressão arterial", "q": "Em frequência cardíaca normal, uma aproximação comum da pressão arterial média é:", "opts": ["PAS + PAD.", "PAD + 1/3 da pressão de pulso.", "PAS − PAD/3.", "PAS × PAD."], "ans": 1, "why": "PAM ≈ PAD + 1/3(PAS − PAD) em condições usuais."}, {"id": 27, "area": "Renal", "topic": "Volume extracelular", "q": "A aldosterona nas células principais do néfron distal favorece:", "opts": ["Menor reabsorção de Na⁺ e menor secreção de K⁺.", "Maior reabsorção de Na⁺ e maior secreção de K⁺.", "Maior reabsorção de glicose.", "Bloqueio da Na⁺/K⁺-ATPase."], "ans": 1, "why": "Aldosterona aumenta ENaC e Na⁺/K⁺-ATPase, favorecendo reabsorção de Na⁺ e secreção de K⁺."}, {"id": 37, "area": "Neurofisiologia", "topic": "Sistema nervoso autônomo", "q": "Na maioria dos órgãos-alvo, neurônios pós-ganglionares simpáticos liberam principalmente:", "opts": ["Acetilcolina", "Glutamato", "Noradrenalina", "GABA"], "ans": 2, "why": "A maioria dos pós-ganglionares simpáticos é noradrenérgica; uma exceção clássica são glândulas sudoríparas, que recebem fibras colinérgicas."}, {"id": 8, "area": "Endócrino", "topic": "Reprodução feminina", "q": "No ciclo menstrual normal, o pico pré-ovulatório de LH ocorre principalmente devido a:", "opts": ["Feedback positivo de níveis elevados de estradiol sobre o eixo hipotálamo-hipófise.", "Queda abrupta de progesterona no início da fase folicular.", "Feedback negativo contínuo do estradiol.", "Aumento de prolactina no meio do ciclo."], "ans": 0, "why": "Estradiol elevado e sustentado no fim da fase folicular muda para feedback positivo e desencadeia o pico de LH."}, {"id": 18, "area": "Cardiovascular", "topic": "Regulação da pressão arterial", "q": "Um aumento agudo da pressão arterial eleva o estiramento dos barorreceptores carotídeos e aórticos. A resposta reflexa esperada é:", "opts": ["Menor descarga dos barorreceptores e aumento simpático.", "Maior descarga dos barorreceptores, redução simpática e aumento parassimpático.", "Maior descarga dos barorreceptores e aumento simpático.", "Ausência de alteração autonômica."], "ans": 1, "why": "Mais pressão aumenta a descarga barorreceptora, levando a menor atividade simpática e maior atividade vagal."}, {"id": 28, "area": "Renal", "topic": "Volume extracelular", "q": "Qual situação estimula a liberação de renina pelas células justaglomerulares?", "opts": ["Aumento importante da perfusão renal.", "Aumento de NaCl detectado pela mácula densa.", "Redução da pressão de perfusão renal.", "Aumento isolado de pressão arterial sistêmica."], "ans": 2, "why": "Baixa perfusão renal, menor NaCl na mácula densa e estímulo simpático β1 favorecem renina."}, {"id": 38, "area": "Neurofisiologia", "topic": "Movimento voluntário", "q": "O fuso muscular sinaliza principalmente:", "opts": ["Tensão desenvolvida no tendão.", "Comprimento muscular e velocidade de estiramento.", "Concentração de lactato muscular.", "Atividade exclusiva de motoneurônios alfa."], "ans": 1, "why": "Fusos musculares detectam comprimento/estiramento; órgãos tendinosos de Golgi sinalizam tensão."}, {"id": 9, "area": "Endócrino", "topic": "Reprodução masculina", "q": "No testículo, o LH atua predominantemente sobre:", "opts": ["Células de Sertoli, estimulando diretamente a espermatogênese.", "Células de Leydig, estimulando síntese de testosterona.", "Espermatogônias, induzindo meiose.", "Epidídimo, aumentando a secreção de FSH."], "ans": 1, "why": "LH estimula as células de Leydig a produzirem testosterona; FSH atua principalmente sobre Sertoli."}, {"id": 19, "area": "Cardiovascular", "topic": "Regulação do fluxo", "q": "Em um tecido metabolicamente ativo, o aumento local de metabólitos vasodilatadores tende a:", "opts": ["Aumentar a resistência arteriolar local e reduzir o fluxo.", "Diminuir a resistência arteriolar local e aumentar o fluxo.", "Fechar capilares por vasoconstrição reflexa obrigatória.", "Não modificar o fluxo, pois apenas o sistema nervoso regula arteríolas."], "ans": 1, "why": "Regulação metabólica local promove vasodilatação e ajusta o fluxo à demanda do tecido."}, {"id": 29, "area": "Renal", "topic": "Osmolaridade", "q": "Em uma pessoa saudável, aumento da osmolaridade plasmática tende a:", "opts": ["Reduzir ADH e reduzir sede.", "Aumentar ADH e estimular sede.", "Aumentar aldosterona como única resposta.", "Inibir osmorreceptores hipotalâmicos."], "ans": 1, "why": "Osmorreceptores hipotalâmicos detectam hiperosmolaridade e promovem ADH e sede."}, {"id": 39, "area": "Neurofisiologia", "topic": "Movimento voluntário", "q": "O trato corticoespinal é especialmente importante para:", "opts": ["Controle voluntário de movimentos, sobretudo movimentos finos distais.", "Produção de hormônios hipofisários.", "Controle primário da filtração glomerular.", "Condução de dor visceral exclusivamente."], "ans": 0, "why": "O sistema corticoespinal participa do controle motor voluntário, com papel importante em movimentos finos."}, {"id": 10, "area": "Endócrino", "topic": "Eixo hipotálamo-hipófise", "q": "Qual hormônio da adeno-hipófise estimula diretamente o córtex adrenal a produzir glicocorticoides?", "opts": ["TSH", "ACTH", "GH", "FSH"], "ans": 1, "why": "ACTH estimula o córtex adrenal, especialmente a produção de cortisol."}, {"id": 20, "area": "Cardiovascular", "topic": "Biofísica da circulação", "q": "Na circulação sistêmica, qual segmento é classicamente considerado o principal local de resistência vascular ajustável?", "opts": ["Aorta", "Grandes veias", "Arteríolas", "Capilares"], "ans": 2, "why": "Arteríolas possuem forte capacidade de alterar seu calibre e são os principais vasos de resistência."}, {"id": 30, "area": "Renal", "topic": "Secreção tubular", "q": "O clearance de PAH, em baixas concentrações plasmáticas, aproxima-se do fluxo plasmático renal efetivo porque o PAH:", "opts": ["É apenas reabsorvido.", "Não é filtrado pelo glomérulo.", "É filtrado e intensamente secretado pelos túbulos.", "É produzido exclusivamente pelo rim."], "ans": 2, "why": "PAH é filtrado e secretado, sendo quase totalmente removido do plasma renal em uma passagem quando em baixas concentrações."}, {"id": 40, "area": "Neurofisiologia", "topic": "Movimento voluntário", "q": "Uma função central do cerebelo é:", "opts": ["Gerar diretamente a força muscular como motoneurônio final.", "Coordenar o movimento, comparar comando e execução e contribuir para correção de erros motores.", "Produzir catecolaminas adrenais.", "Regular diretamente a filtração glomerular."], "ans": 1, "why": "O cerebelo integra informação sensorial e motora para coordenação, temporização e correção de erros."}];
+const letters = ["A","B","C","D"];
+const totalSeconds = 180 * 60;
+const storageKey = "ppgcf_diag_2026_v1";
+
+let state = JSON.parse(localStorage.getItem(storageKey) || "null") || {
+  started:false, startTime:null, answers:{}, submitted:false, submitTime:null
+};
+
+const intro = document.getElementById("intro");
+const exam = document.getElementById("exam");
+const results = document.getElementById("results");
+const form = document.getElementById("quizForm");
+let timerHandle = null;
+
+function save() { localStorage.setItem(storageKey, JSON.stringify(state)); }
+
+function renderQuestions() {
+  form.innerHTML = "";
+  questions.forEach((q, idx) => {
+    const box = document.createElement("div");
+    box.className = "question";
+    box.id = "qbox-"+q.id;
+    box.innerHTML = `
+      <div class="qhead">
+        <div><strong>Questão ${idx+1}</strong></div>
+        <span class="badge">${q.area} • ${q.topic}</span>
+      </div>
+      <div class="qtext">${q.q}</div>
+      ${q.opts.map((o,i)=>`
+        <label class="option">
+          <input type="radio" name="q${q.id}" value="${i}" ${String(state.answers[q.id])===String(i) ? "checked" : ""}>
+          <strong>${letters[i]}.</strong> ${o}
+        </label>`).join("")}
+    `;
+    form.appendChild(box);
+  });
+  form.querySelectorAll("input[type=radio]").forEach(inp => {
+    inp.addEventListener("change", e => {
+      const id = e.target.name.replace("q","");
+      state.answers[id] = Number(e.target.value);
+      save();
+      updateProgress();
+    });
+  });
+}
+
+function updateProgress() {
+  const n = Object.keys(state.answers).length;
+  document.getElementById("answered").textContent = n;
+  document.getElementById("progress").style.width = (n/40*100)+"%";
+}
+
+function formatTime(s) {
+  s = Math.max(0, Math.floor(s));
+  const h = String(Math.floor(s/3600)).padStart(2,"0");
+  const m = String(Math.floor((s%3600)/60)).padStart(2,"0");
+  const sec = String(s%60).padStart(2,"0");
+  return `${h}:${m}:${sec}`;
+}
+
+function elapsedSeconds() {
+  const end = state.submitTime || Date.now();
+  return state.startTime ? Math.floor((end-state.startTime)/1000) : 0;
+}
+
+function tick() {
+  const left = totalSeconds - elapsedSeconds();
+  document.getElementById("timer").textContent = formatTime(left);
+  if (left <= 0 && !state.submitted) {
+    clearInterval(timerHandle);
+    finalize(true);
+  }
+}
+
+function startExam() {
+  if (!state.started) {
+    state.started = true;
+    state.startTime = Date.now();
+    save();
+  }
+  intro.classList.add("hidden");
+  results.classList.add("hidden");
+  exam.classList.remove("hidden");
+  renderQuestions();
+  updateProgress();
+  tick();
+  timerHandle = setInterval(tick,1000);
+}
+
+function finalize(auto=false) {
+  const unanswered = questions.filter(q => state.answers[q.id] === undefined);
+  if (!auto && unanswered.length) {
+    const ok = confirm(`Ainda há ${unanswered.length} questão(ões) sem resposta. Deseja finalizar mesmo assim?`);
+    if (!ok) return;
+  }
+  if (!auto && !confirm("Finalizar e ver a correção? Depois disso o resultado ficará registrado.")) return;
+  state.submitted = true;
+  state.submitTime = Date.now();
+  save();
+  clearInterval(timerHandle);
+  showResults();
+}
+
+function compute() {
+  let correct = 0;
+  const byArea = {}, byTopic = {}, wrong = [], blank=[];
+  questions.forEach(q => {
+    byArea[q.area] ||= {c:0,t:0};
+    byTopic[q.topic] ||= {area:q.area,c:0,t:0};
+    byArea[q.area].t++; byTopic[q.topic].t++;
+    const a = state.answers[q.id];
+    if (a === undefined) blank.push(q.id);
+    if (a === q.ans) {
+      correct++; byArea[q.area].c++; byTopic[q.topic].c++;
+    } else wrong.push(q.id);
+  });
+  return {correct, byArea, byTopic, wrong, blank};
+}
+
+function pct(c,t) { return Math.round(c/t*100); }
+
+function showResults() {
+  intro.classList.add("hidden");
+  exam.classList.add("hidden");
+  results.classList.remove("hidden");
+  const r = compute();
+  const note = (r.correct/4).toFixed(2).replace(".",",");
+  const elapsed = elapsedSeconds();
+  const em = Math.floor(elapsed/60), es = elapsed%60;
+  const pass = r.correct >= 24;
+
+  document.getElementById("resultMetrics").innerHTML = `
+    <div class="metric"><div class="small">Acertos</div><div class="big">${r.correct}/40</div></div>
+    <div class="metric"><div class="small">Nota equivalente</div><div class="big">${note}</div></div>
+    <div class="metric"><div class="small">Tempo usado</div><div class="big">${em}m ${es}s</div></div>
+    <div class="metric"><div class="small">Corte 6,0</div><div class="big" style="color:${pass?'var(--ok)':'var(--bad)'}">${pass?'≥ 6,0':'< 6,0'}</div></div>
+  `;
+
+  const areasOrder = ["Endócrino","Cardiovascular","Renal","Neurofisiologia"];
+  document.getElementById("areaTable").innerHTML = `
+    <table><thead><tr><th>Área</th><th>Acertos</th><th>%</th><th>Nota /10</th></tr></thead><tbody>
+    ${areasOrder.map(a=>{
+      const x=r.byArea[a]; return `<tr><td>${a}</td><td>${x.c}/${x.t}</td><td>${pct(x.c,x.t)}%</td><td>${(10*x.c/x.t).toFixed(1).replace(".",",")}</td></tr>`;
+    }).join("")}</tbody></table>`;
+
+  const topics = Object.entries(r.byTopic).sort((a,b)=>pct(a[1].c,a[1].t)-pct(b[1].c,b[1].t));
+  document.getElementById("topicTable").innerHTML = `
+    <table><thead><tr><th>Tópico</th><th>Área</th><th>Acertos</th><th>%</th></tr></thead><tbody>
+    ${topics.map(([t,x])=>`<tr><td>${t}</td><td>${x.area}</td><td>${x.c}/${x.t}</td><td>${pct(x.c,x.t)}%</td></tr>`).join("")}
+    </tbody></table>`;
+
+  const areaLines = areasOrder.map(a=>{
+    const x=r.byArea[a];
+    return `- ${a}: ${x.c}/${x.t} (${pct(x.c,x.t)}%)`;
+  }).join("\n");
+  const weakest = topics.slice(0,5).map(([t,x])=>`${t} ${x.c}/${x.t}`).join("; ");
+
+  const text =
+`DIAGNÓSTICO PPGCF/UFES — GABRIELA
+Data: ${new Date(state.submitTime).toLocaleDateString("pt-BR")}
+Acertos: ${r.correct}/40
+Nota equivalente: ${note}/10
+Tempo: ${em}min ${es}s
+Questões em branco: ${r.blank.length}
+
+POR ÁREA
+${areaLines}
+
+TÓPICOS COM MENOR DESEMPENHO
+${weakest || "nenhum"}
+
+QUESTÕES ERRADAS/EM BRANCO
+${r.wrong.length ? r.wrong.join(", ") : "nenhuma"}
+
+Pedido: use este diagnóstico para montar o plano de estudo diário de 08/09/2026 até 18/10/2026, priorizando bolsa/classificação, com 2h reservadas em dias úteis (aprox. 1h30 líquida), 3h em bloco no fim de semana, segundas e quintas como dias mais difíceis, sem flashcards e com preferência por livro + resumo + correção de questões.`;
+
+  document.getElementById("summaryText").value = text;
+
+  const review = document.getElementById("review");
+  review.innerHTML = "";
+  questions.forEach((q,idx)=>{
+    const a = state.answers[q.id];
+    const ok = a === q.ans;
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+      <div class="qhead"><strong>Questão ${idx+1} — ${ok ? "✓ correta" : "✗ revisar"}</strong><span class="badge">${q.area} • ${q.topic}</span></div>
+      <div class="qtext">${q.q}</div>
+      ${q.opts.map((o,i)=>{
+        let cls="option";
+        if(i===q.ans) cls += " correct";
+        if(a===i && i!==q.ans) cls += " incorrect";
+        return `<div class="${cls}"><strong>${letters[i]}.</strong> ${o}${i===q.ans?" <strong>— correta</strong>":""}</div>`;
+      }).join("")}
+      <div class="explanation"><strong>Por quê:</strong> ${q.why}</div>`;
+    review.appendChild(div);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.getElementById("startBtn").addEventListener("click", startExam);
+document.getElementById("submitBtn").addEventListener("click", ()=>finalize(false));
+document.getElementById("copyBtn").addEventListener("click", async ()=>{
+  const ta = document.getElementById("summaryText");
+  try { await navigator.clipboard.writeText(ta.value); alert("Resultado copiado."); }
+  catch(e) { ta.select(); document.execCommand("copy"); alert("Resultado copiado."); }
+});
+document.getElementById("downloadBtn").addEventListener("click", ()=>{
+  const text = document.getElementById("summaryText").value;
+  const blob = new Blob([text],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="resultado_diagnostico_gabriela_ppgcf.txt"; a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  if(confirm("Apagar todas as respostas e reiniciar do zero?")) {
+    localStorage.removeItem(storageKey); location.reload();
+  }
+});
+
+if (state.submitted) showResults();
+else if (state.started) startExam();
+</script>
+</body>
+</html>
